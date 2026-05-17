@@ -2,6 +2,7 @@ package com.example.email_butler.controller;
 
 import com.example.email_butler.model.ScanEstimate;
 import com.example.email_butler.model.SenderCount;
+import com.example.email_butler.model.SenderSize;
 import com.example.email_butler.service.EmailService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,17 +27,29 @@ public class GmailController {
             return "hello from email butler";
     }
 
-    @GetMapping("/summary")
+    @GetMapping("/countSummary")
     public ResponseEntity<?> getTopSenders(
             @RequestParam(defaultValue = "2147483647") int scanLimit) {
-
         try {
             List<SenderCount> result = gmailService.getTopSenders(scanLimit);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity
                     .internalServerError()
-                    .body("Error fetching Gmail data: " + e.getMessage());
+                    .body("Error fetching count summary: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/sizeSummary")
+    public ResponseEntity<?> getSizeSummary(
+            @RequestParam(defaultValue = "2147483647") int scanLimit) {
+        try {
+            List<SenderSize> result = gmailService.getTopSendersBySize(scanLimit);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .internalServerError()
+                    .body("Error fetching size summary: " + e.getMessage());
         }
     }
 

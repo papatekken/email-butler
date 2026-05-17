@@ -2,6 +2,7 @@ package com.example.email_butler.service.impl;
 
 import com.example.email_butler.model.ScanEstimate;
 import com.example.email_butler.model.SenderCount;
+import com.example.email_butler.model.SenderSize;
 import com.example.email_butler.service.EmailService;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -18,7 +19,6 @@ import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.ListMessagesResponse;
 import com.google.api.services.gmail.model.Message;
 import com.google.api.services.gmail.model.MessagePartHeader;
-import com.google.api.services.gmail.model.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -105,6 +105,54 @@ public class GmailServiceImpl implements EmailService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<SenderSize> getTopSendersBySize(int scanLimit) throws GeneralSecurityException, IOException {
+        Gmail gmail = buildGmailClient();
+        Map<String, Long> sizeMap = new HashMap<>();
+        String pageToken = null;
+        int fetched = 0;
+
+        while (fetched < scanLimit) {
+            int batchSize = Math.min(100, scanLimit - fetched);
+
+            Gmail.Users.Messages.List request = gmail.users().messages()
+                    .list("me")
+                    .setMaxResults((long) batchSize);
+
+            if (pageToken != null) request.setPageToken(pageToken);
+
+            ListMessagesResponse response = request.execute();
+            List<Message> messages = response.getMessages();
+            if (messages == null || messages.isEmpty()) break;
+
+            for (Message msg : messages) {
+                Message full = gmail.users().messages()
+                        .get("me", msg.getId())
+                        .setFormat("metadata")
+                        .setMetadataHeaders(Collections.singletonList("From"))
+                        .execute();
+
+                String from = extractFromHeader(full);
+                long size = full.getSizeEstimate() != null
+                        ? full.getSizeEstimate().longValue()
+                        : 0L;
+
+                if (from != null && !from.isEmpty()) {
+                    sizeMap.merge(from, size, Long::sum);
+                }
+                fetched++;
+            }
+
+            pageToken = response.getNextPageToken();
+            if (pageToken == null) break;
+        }
+
+        return sizeMap.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(100)
+                .map(e -> new SenderSize(e.getKey(), e.getValue()))
+                .collect(Collectors.toList());
+    }
     // -------------------------------------------------------------------------
     // Private helpers
     // -------------------------------------------------------------------------

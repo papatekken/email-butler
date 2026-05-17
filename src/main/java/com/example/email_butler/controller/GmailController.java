@@ -1,0 +1,42 @@
+package com.example.email_butler.controller;
+
+import com.example.email_butler.model.SenderCount;
+import com.example.email_butler.service.EmailService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/gmail")
+public class GmailController {
+
+    private final EmailService gmailService;
+
+    public GmailController(EmailService gmailService) {
+        this.gmailService = gmailService;
+    }
+
+    @GetMapping("/hello")
+    public String getTopSenders(){
+            return "ABC";
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<?> getTopSenders(
+            @RequestParam(defaultValue = "2147483647") int scanLimit) {
+
+        try {
+            List<SenderCount> result = gmailService.getTopSenders(scanLimit);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .internalServerError()
+                    .body("Error fetching Gmail data: " + e.getMessage());
+        }
+    }
+
+}

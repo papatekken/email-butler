@@ -1,5 +1,6 @@
 package com.example.email_butler.service.impl;
 
+import com.example.email_butler.model.ScanEstimate;
 import com.example.email_butler.model.SenderCount;
 import com.example.email_butler.service.EmailService;
 import com.google.api.client.auth.oauth2.Credential;
@@ -17,6 +18,7 @@ import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.ListMessagesResponse;
 import com.google.api.services.gmail.model.Message;
 import com.google.api.services.gmail.model.MessagePartHeader;
+import com.google.api.services.gmail.model.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -98,7 +100,7 @@ public class GmailServiceImpl implements EmailService {
         // Sort by count descending, return top 10
         return senderMap.entrySet().stream()
                 .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-                .limit(10)
+                .limit(100)
                 .map(e -> new SenderCount(e.getKey(), e.getValue()))
                 .collect(Collectors.toList());
     }
@@ -155,5 +157,19 @@ public class GmailServiceImpl implements EmailService {
                 .map(MessagePartHeader::getValue)
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public ScanEstimate estimateScanTime() throws GeneralSecurityException, IOException {
+        Gmail gmail = buildGmailClient();
+
+        // Single API call — confirmed working
+        com.google.api.services.gmail.model.Profile profile =
+                gmail.users().getProfile("me").execute();
+
+        int totalMessages = profile.getMessagesTotal();
+        long historyId    = profile.getHistoryId().longValue(); // not needed but available
+
+        return new ScanEstimate(totalMessages);
     }
 }

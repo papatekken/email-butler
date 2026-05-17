@@ -1,5 +1,6 @@
 package com.example.email_butler.controller;
 
+import com.example.email_butler.model.ScanEstimate;
 import com.example.email_butler.model.SenderCount;
 import com.example.email_butler.service.EmailService;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class GmailController {
 
     @GetMapping("/hello")
     public String getTopSenders(){
-            return "ABC";
+            return "hello from email butler";
     }
 
     @GetMapping("/summary")
@@ -38,5 +39,18 @@ public class GmailController {
                     .body("Error fetching Gmail data: " + e.getMessage());
         }
     }
+
+    @GetMapping("/estimate")
+    public ResponseEntity<?> estimateScanTime() {
+        try {
+            ScanEstimate estimate = gmailService.estimateScanTime();
+            return ResponseEntity.ok(estimate);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .internalServerError()
+                    .body("Error estimating scan time: " + e.getMessage());
+        }
+    }
+
 
 }

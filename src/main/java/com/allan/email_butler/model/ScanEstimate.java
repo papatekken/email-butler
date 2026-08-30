@@ -1,6 +1,6 @@
-package com.example.email_butler.model;
+package com.allan.email_butler.model;
 
-import com.example.email_butler.util.Utils;
+import com.allan.email_butler.util.Utils;
 
 public class ScanEstimate {
 

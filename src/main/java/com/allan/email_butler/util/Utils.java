@@ -1,4 +1,4 @@
-package com.example.email_butler.util;
+package com.allan.email_butler.util;
 
 public class Utils {
 

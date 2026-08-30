@@ -1,4 +1,4 @@
-package com.example.email_butler.model;
+package com.allan.email_butler.model;
 
 public class SenderCount {
     private String sender;

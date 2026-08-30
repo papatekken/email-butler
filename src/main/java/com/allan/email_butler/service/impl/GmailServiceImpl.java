@@ -1,9 +1,9 @@
-package com.example.email_butler.service.impl;
+package com.allan.email_butler.service.impl;
 
-import com.example.email_butler.model.ScanEstimate;
-import com.example.email_butler.model.SenderCount;
-import com.example.email_butler.model.SenderSize;
-import com.example.email_butler.service.EmailService;
+import com.allan.email_butler.model.ScanEstimate;
+import com.allan.email_butler.model.SenderCount;
+import com.allan.email_butler.model.SenderSize;
+import com.allan.email_butler.service.EmailService;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;

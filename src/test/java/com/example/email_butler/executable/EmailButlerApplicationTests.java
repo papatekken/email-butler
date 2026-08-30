@@ -1,4 +1,4 @@
-package com.example.email_butler.executable;
+package com.allan.email_butler.executable;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

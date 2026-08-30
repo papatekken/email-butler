@@ -1,9 +1,9 @@
-package com.example.email_butler.controller;
+package com.allan.email_butler.controller;
 
-import com.example.email_butler.model.ScanEstimate;
-import com.example.email_butler.model.SenderCount;
-import com.example.email_butler.model.SenderSize;
-import com.example.email_butler.service.EmailService;
+import com.allan.email_butler.model.ScanEstimate;
+import com.allan.email_butler.model.SenderCount;
+import com.allan.email_butler.model.SenderSize;
+import com.allan.email_butler.service.EmailService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,10 +1,10 @@
-package com.example.email_butler.service;
+package com.allan.email_butler.service;
 
 
 
-import com.example.email_butler.model.ScanEstimate;
-import com.example.email_butler.model.SenderCount;
-import com.example.email_butler.model.SenderSize;
+import com.allan.email_butler.model.ScanEstimate;
+import com.allan.email_butler.model.SenderCount;
+import com.allan.email_butler.model.SenderSize;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
